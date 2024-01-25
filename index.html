@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление яркостью светодиода</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .slider {
+            width: 300px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Управление яркостью светодиода</h1>
+    <div class="slider">
+        <input type="range" min="0" max="1023" id="brightnessSlider">
+        <p>Значение: <span id="brightnessValue">0</span></p>
+    </div>
+
+    <script>
+        document.getElementById('brightnessSlider').addEventListener('input', function() {
+            let brightness = this.value;
+            document.getElementById('brightnessValue').textContent = brightness;
+            updateBrightness(brightness);
+        });
+
+        function updateBrightness(brightness) {
+            fetch('/brightness', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ value: brightness }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Brightness updated:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
